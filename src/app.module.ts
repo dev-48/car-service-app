@@ -1,7 +1,11 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './api/v1/auth/auth.module';
+import { UsersModule } from './api/v1/users/users.module';
+import { user } from './entities/user.entity';
+import { token } from './entities/token.entity';
+import { AdminMiddleware } from './middlewares/admin.middleware';
 
 @Module({
   imports: [
@@ -19,9 +23,15 @@ import { AuthModule } from './api/v1/auth/auth.module';
       entities: ['dist/**/*.entity.js'],
       synchronize: true,
     }),
+    TypeOrmModule.forFeature([user, token]),
     AuthModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AdminMiddleware).forRoutes('api/v1/users');
+  }
+}

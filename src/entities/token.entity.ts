@@ -12,7 +12,10 @@ export class token {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToOne(() => user)
+  @OneToOne(() => user, {
+    onDelete: 'CASCADE',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn()
   user: user;
 
