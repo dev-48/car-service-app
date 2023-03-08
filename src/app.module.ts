@@ -6,6 +6,7 @@ import { UsersModule } from './api/v1/users/users.module';
 import { user } from './entities/user.entity';
 import { token } from './entities/token.entity';
 import { AdminMiddleware } from './middlewares/admin.middleware';
+import { CarsModule } from './api/v1/cars/cars.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AdminMiddleware } from './middlewares/admin.middleware';
     TypeOrmModule.forFeature([user, token]),
     AuthModule,
     UsersModule,
+    CarsModule,
   ],
   controllers: [],
   providers: [],
