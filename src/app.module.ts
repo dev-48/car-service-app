@@ -7,6 +7,11 @@ import { user } from './entities/user.entity';
 import { token } from './entities/token.entity';
 import { AdminMiddleware } from './middlewares/admin.middleware';
 import { CarsModule } from './api/v1/cars/cars.module';
+import { ApplicationsModule } from './api/v1/applications/applications.module';
+import { StaffMiddleware } from './middlewares/staff.middleware';
+import { ManagerMiddleware } from './middlewares/manager.middleware';
+import { ToolsModule } from './api/v1/tools/tools.module';
+import { MechanicsMiddleware } from './middlewares/mechanics.middleware';
 
 @Module({
   imports: [
@@ -28,6 +33,8 @@ import { CarsModule } from './api/v1/cars/cars.module';
     AuthModule,
     UsersModule,
     CarsModule,
+    ApplicationsModule,
+    ToolsModule,
   ],
   controllers: [],
   providers: [],
@@ -35,5 +42,15 @@ import { CarsModule } from './api/v1/cars/cars.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(AdminMiddleware).forRoutes('api/v1/users');
+    consumer.apply(AdminMiddleware).forRoutes('api/v1/applications/delete');
+    consumer.apply(AdminMiddleware).forRoutes('api/v1/applications/edit');
+    consumer.apply(StaffMiddleware).forRoutes('api/v1/applications/change');
+    consumer
+      .apply(ManagerMiddleware)
+      .forRoutes('api/v1/applications/change/executor');
+    consumer
+      .apply(ManagerMiddleware)
+      .forRoutes('api/v1/applications/staff/mechanics');
+    consumer.apply(MechanicsMiddleware).forRoutes('api/v1/tools');
   }
 }
